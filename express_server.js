@@ -3,13 +3,26 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080;
 
+
+const generateRandomString = (length, chars) => {
+  let result = '';
+  for (var i = length; i > 0; --i) {
+     result += chars[Math.round(Math.random() * (chars.length - 1))];
+  }
+  return result;
+};
+const rString = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
 
 app.get("/", (req, res) => {
   res.send("Hello!");
