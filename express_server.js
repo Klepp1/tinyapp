@@ -5,7 +5,7 @@ const PORT = 8080;
 const cookieParser = require('cookie-parser');
 const findKeyByValue = require('./test');
 
-function getKeyByValue(object, value) {
+const getKeyByValue = (object, value) => {
   for (const prop of Object.values(object)) {
     for (const prop2 in prop) {
       if (prop[prop2] === value) {
@@ -18,8 +18,8 @@ function getKeyByValue(object, value) {
 
 const generateRandomString = (length, chars) => {
   let result = '';
-  for (var i = length; i > 0; --i) {
-     result += chars[Math.round(Math.random() * (chars.length - 1))];
+  for (let i = length; i > 0; --i) {
+    result += chars[Math.round(Math.random() * (chars.length - 1))];
   }
   return result;
 };
@@ -51,16 +51,16 @@ app.get('/urls.json', (req, res) => {
 app.get('/urls/login', (req, res) => {
   const templateVars = { user: users[req.cookies['user_id']]};
   res.render('urls_login', templateVars);
-})
+});
 
 app.get('/urls', (req, res) => {
-  const templateVars = { urls: urlDatabase, user: users[req.cookies['user_id']] }
+  const templateVars = { urls: urlDatabase, user: users[req.cookies['user_id']] };
   res.render('urls_index', templateVars);
-  console.log(users)
+  console.log(users);
 });
 
 app.get('/urls/new', (req, res) => {
-  const templateVars = {user: users[req.cookies['user_id']] }
+  const templateVars = {user: users[req.cookies['user_id']] };
   res.render('urls_new', templateVars);
 });
 
@@ -80,23 +80,23 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post('/urls/:shortURL', (req, res) => {
-urlDatabase[req.params.shortURL] = req.body['New URL'];
-res.redirect(req.params.shortURL);
+  urlDatabase[req.params.shortURL] = req.body['New URL'];
+  res.redirect(req.params.shortURL);
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
-  delete urlDatabase[`${req.params.shortURL}`]
-  res.redirect('http://localhost:8080/urls')
+  delete urlDatabase[`${req.params.shortURL}`];
+  res.redirect('http://localhost:8080/urls');
 });
 
 app.post('/urls/login/new', (req, res) => {
   if (!getKeyByValue(users, req.body.email)) {
-      res.status(403).send('Invalid Email or password!');
-    } else if (getKeyByValue(users, req.body.email)) {
-      let id = findKeyByValue(users, req.body.email)
-      if (users[id]['password'] === req.body.password) {
-        res.cookie('user_id', id);
-        res.redirect('/urls')
+    res.status(403).send('Invalid Email or password!');
+  } else if (getKeyByValue(users, req.body.email)) {
+    let id = findKeyByValue(users, req.body.email);
+    if (users[id]['password'] === req.body.password) {
+      res.cookie('user_id', id);
+      res.redirect('/urls');
     }
   }
 });
@@ -112,19 +112,19 @@ app.get('/u/:shortURL', (req, res) => {
 });
 
 app.post('/urls/register/newUser', (req, res) => {
-  const random = generateRandomString(11, '1234567890')
+  const random = generateRandomString(11, '1234567890');
   if (!req.body.email || !req.body.password) {
-    res.send('bad Fields')
-  } else if (getKeyByValue(users, req.body.email)){
+    res.send('bad Fields');
+  } else if (getKeyByValue(users, req.body.email)) {
     res.status(400).send('Account found with this email!');
   } else {
-  users[random] = { 
-    id: random, 
-    email: req.body.email, 
-    password: req.body.password
-  }
-  res.cookie('user_id', Object.keys(users)[Object.keys(users).length-1] )
-  res.redirect('/urls');
+    users[random] = {
+      id: random,
+      email: req.body.email,
+      password: req.body.password
+    };
+    res.cookie('user_id', Object.keys(users)[Object.keys(users).length - 1]);
+    res.redirect('/urls');
   }
 });
 
