@@ -3,7 +3,7 @@
 <head>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>URL - TinyApp Example</title>
+  <title style="font-style: oblique">URL - TinyApp Example</title>
 </head>
 
 <body>
@@ -11,14 +11,14 @@
   <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
-        <h5 class="card-title">TinyURL for: <%= longURL %></h5>
-        <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
+        <h5 class="card-title" style="font-style: oblique">TinyURL for: <%= longURL %></h5>
+        <p class="card-text" style="font-style: oblique">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
         <form method="POST" action="/urls/<%= shortURL %>">
-          <label for="New URL"><b>New URL</b></label>
+          <label for="New URL" style="font-style: oblique"><b>New URL</b></label>
           <input class="center-block" type="text" name="New URL" placeholder="http://" style="width: 300px; margin: 1em">
-          <button type="edit" class="btn btn-primary">Edit</button>
+          <button type="edit" class="btn btn-primary" style="font-style: oblique">Edit</button>
         </form>
-        <p class="card-text">Create a new link <a href=""> here!</a></p>
+        <p class="card-text" style="font-style: oblique">Create a new link <a href=""> here!</a></p>
       </div>
     <div class="card-footer text-muted"></div>
   </div>

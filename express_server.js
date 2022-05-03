@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080;
 const cookieParser = require('cookie-parser');
+const findKeyByValue = require('./test');
 
 function getKeyByValue(object, value) {
   for (const prop of Object.values(object)) {
@@ -86,6 +87,18 @@ res.redirect(req.params.shortURL);
 app.post('/urls/:shortURL/delete', (req, res) => {
   delete urlDatabase[`${req.params.shortURL}`]
   res.redirect('http://localhost:8080/urls')
+});
+
+app.post('/urls/login/new', (req, res) => {
+  if (!getKeyByValue(users, req.body.email)) {
+      res.status(403).send('Invalid Email or password!');
+    } else if (getKeyByValue(users, req.body.email)) {
+      let id = findKeyByValue(users, req.body.email)
+      if (users[id]['password'] === req.body.password) {
+        res.cookie('user_id', id);
+        res.redirect('/urls')
+    }
+  }
 });
 
 app.post("/logout", (req, res) => {

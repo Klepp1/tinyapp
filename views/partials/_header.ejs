@@ -1,24 +1,26 @@
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
-    <a class="navbar-brand" href="/urls">TinyApp</a>
+    <a class="navbar-brand" href="/urls" style="font-style: oblique">TinyApp</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <a class="nav-item nav-link" href="/urls" style="font-style: oblique">My URLs</a>
+        <a class="nav-item nav-link" href="/urls/new" style="font-style: oblique">Create New URL</a>
       </div>
     </div>
+    <style> .link { color: #FEFBFA; }</style>
     <% if(user === undefined) { %>
       <form method="POST" action="/urls/login">
-        <a href="/urls/register"><b>Register Here!</b></a>
-        <a href="/urls/login"><b>Login here!</b></a>
+        <a  class="link" href="/urls/register" style="font-style: oblique">Register Here!</a>
+        <a><b>---</b></a>
+        <a class="link" href="/urls/login" style="font-style: oblique">Login here!</a>
         </form>
       <% } else { %>
-        <p class="right"><font size="+1">Logged in as: <%= user.email %></font></p>
+        <p class="right" style="font-style: oblique"><font size="+1">Logged in as: <%= user.email %></font></p>
         <form method="POST" action="/logout">
-          <button type="logout"  class="btn btn-outline-dark">Logout</button>
+          <button type="logout"  class="btn btn-outline-dark" style="font-style: oblique">Logout</button>
         </form>
         <% } %>
   </nav>
