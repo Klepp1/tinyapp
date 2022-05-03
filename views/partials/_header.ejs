@@ -12,7 +12,8 @@
     </div>
     <% if(user === undefined) { %>
       <form method="POST" action="/urls/login">
-        <a href="/urls/register">Register Here!</a>
+        <a href="/urls/register"><b>Register Here!</b></a>
+        <a href="/urls/login"><b>Login here!</b></a>
         </form>
       <% } else { %>
         <p class="right"><font size="+1">Logged in as: <%= user.email %></font></p>
