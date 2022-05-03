@@ -32,8 +32,7 @@ app.use(cookieParser());
 
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  
 };
 
 const users = {
@@ -61,6 +60,9 @@ app.get('/urls', (req, res) => {
 
 app.get('/urls/new', (req, res) => {
   const templateVars = {user: users[req.cookies['user_id']] };
+  if (!users[req.cookies['user_id']]) {
+    res.redirect('/urls/login');
+  }
   res.render('urls_new', templateVars);
 });
 
@@ -70,12 +72,18 @@ app.get('/urls/register', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  urlDatabase[rString] = req.body.longURL;
+  if (!users[req.cookies['user_id']]) {
+    res.status(403).send('You must login to create a TinyURL')
+  }
+  urlDatabase[rString] = {
+    longURL: req.body.longURL,
+    userID: users[req.cookies['user_id']]
+  };
   res.redirect(`/urls/${rString}`);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[`${req.params.shortURL}`], links: urlDatabase, user: users[req.cookies['user_id']] };
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[`${req.params.shortURL}`]['longURL'], links: urlDatabase, user: users[req.cookies['user_id']] };
   res.render("urls_show", templateVars);
 });
 
@@ -107,7 +115,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get('/u/:shortURL', (req, res) => {
-  const longURL = urlDatabase[`${req.params.shortURL}`];
+  const longURL = urlDatabase[`${req.params.shortURL}`]['longURL'];
   res.redirect(longURL);
 });
 
