@@ -16,6 +16,16 @@ const getKeyByValue = (object, value) => {
   return false;
 };
 
+const urlsForUser = (id) => {
+let userURLS = {}
+  for (const prop in urlDatabase) {
+    if (urlDatabase[prop].userID === id) {
+      userURLS[prop] = urlDatabase[prop];
+    }
+  }
+  return userURLS;
+};
+
 const generateRandomString = (length, chars) => {
   let result = '';
   for (let i = length; i > 0; --i) {
@@ -23,7 +33,7 @@ const generateRandomString = (length, chars) => {
   }
   return result;
 };
-const rString = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
 
 
 app.set('view engine', 'ejs');
@@ -53,7 +63,7 @@ app.get('/urls/login', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const templateVars = { urls: urlDatabase, user: users[req.cookies['user_id']] };
+  const templateVars = { urls: urlsForUser(req.cookies['user_id']), user: users[req.cookies['user_id']] };
   res.render('urls_index', templateVars);
   console.log(users);
 });
@@ -70,31 +80,46 @@ app.get('/urls/register', (req, res) => {
   const templateVars = { user: users[req.cookies['user_id']] };
   res.render('urls_register', templateVars);
 });
-
 app.post('/urls', (req, res) => {
   if (!users[req.cookies['user_id']]) {
     res.status(403).send('You must login to create a TinyURL')
   }
+  const rString = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   urlDatabase[rString] = {
     longURL: req.body.longURL,
-    userID: users[req.cookies['user_id']]
+    userID: users[req.cookies['user_id']]['id']
   };
+  console.log(urlDatabase);
   res.redirect(`/urls/${rString}`);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  if (!req.cookies['user_id']) {
+    res.status(403).send('This is not your URL!');
+  }
+  if (urlDatabase[req.params.shortURL]['id'] === req.cookies['user_id']['id']) {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[`${req.params.shortURL}`]['longURL'], links: urlDatabase, user: users[req.cookies['user_id']] };
   res.render("urls_show", templateVars);
+  } 
 });
 
 app.post('/urls/:shortURL', (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body['New URL'];
+  if (urlDatabase[req.params.shortURL]['id'] === req.cookies['user_id']['id']) {
+  urlDatabase[req.params.shortURL]['longURL'] = req.body['New URL'];
   res.redirect(req.params.shortURL);
+  } else {
+    res.status(403).send('This is not your URL!');
+  }
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
-  delete urlDatabase[`${req.params.shortURL}`];
-  res.redirect('http://localhost:8080/urls');
+  if (!req.cookies['user_id']) {
+    res.status(403).send('This is not your URL!');
+  } 
+  if (urlDatabase[req.params.shortURL]['id'] === req.cookies['user_id']['id']) {
+    delete urlDatabase[`${req.params.shortURL}`];
+    res.redirect('http://localhost:8080/urls');
+  }
 });
 
 app.post('/urls/login/new', (req, res) => {
