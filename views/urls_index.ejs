@@ -22,6 +22,9 @@
         </tr>
       </thead>
       <tbody>
+        <% if (!user) { %>
+          <td>To create TinyURLS Please register <a href="/urls/register">here </a>or Login <a href="/urls/login">here!</a></td>
+        <% } else { %>
         <% for (let url in urls) { %>
           <tr>
             <td><a href="/u/<%= urls %>"><%= url %></a></td>
@@ -32,8 +35,9 @@
             <form method="POST" action="/urls/<%= url %>/delete">
             <td><button type="delete" class="btn btn-danger" style="font-style: oblique">Delete</button></td>
           </form>
+          <% } %>
+          <% } %>
           </tr>
-        <% } %>
       </tbody>
     </table>
   </main>
